@@ -1,0 +1,203 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+	{
+      "type": "Feature",
+      "properties": {"OBIECTID":"XiAn"},
+      "geometry": {
+        "coordinates": [
+          108.93572008664336,
+          34.384758660179955
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"TianShui"},
+      "geometry": {
+        "coordinates": [
+          105.6894573750119,
+          34.595247769839716
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"LanZhou"},
+      "geometry": {
+        "coordinates": [
+          103.82802716747835,
+          36.085446656652735
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"WuWei"},
+      "geometry": {
+        "coordinates": [
+          102.64797313284578,
+          37.941021951341355
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"GuaZhou"},
+      "geometry": {
+        "coordinates": [
+          95.77113182753038,
+          40.54503452405413
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"HaMi"},
+      "geometry": {
+        "coordinates": [
+          93.50498595751151,
+          42.84813800130598
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"TuLuFan"},
+      "geometry": {
+        "coordinates": [
+          89.17263639943133,
+          42.95973113214319
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"YanQi"},
+      "geometry": {
+        "coordinates": [
+          86.55419126361437,
+          42.096670538572084
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"KuQa"},
+      "geometry": {
+        "coordinates": [
+          82.9455046631142,
+          41.75663184449576
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"AKeSu"},
+      "geometry": {
+        "coordinates": [
+          80.23184572969836,
+          41.23602047141736
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"YiSaiKeHu"},
+      "geometry": {
+        "coordinates": [
+          78.2894332819834,
+          42.81321734967557
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"TuoKeMaKe"},
+      "geometry": {
+        "coordinates": [
+          75.29914805023412,
+          42.84812810138857
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"Uzbekistan"},
+      "geometry": {
+        "coordinates": [
+          66.16744079168453,
+          39.87616532485393
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"ZiGaLaShan"},
+      "geometry": {
+        "coordinates": [
+          66.85913420196653,
+          37.42853850534789
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"AFuHan"},
+      "geometry": {
+        "coordinates": [
+          68.18926082130838,
+          34.80419837532416
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"BeiGeLaMu"},
+      "geometry": {
+        "coordinates": [
+          69.98325102614496,
+          34.34258548911653
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"BaiShaWaCheng"},
+      "geometry": {
+        "coordinates": [
+          71.6370868265555,
+          34.01793447397243
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"OBIECTID":"NaLanTuoShi"},
+      "geometry": {
+        "coordinates": [
+          86.5215966765515,
+          23.84627097703155
+        ],
+        "type": "Point"
+      }
+    }
+  ]
+}

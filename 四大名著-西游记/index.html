@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<title>西游记</title>
+		<style>
+		    html,
+		    body,
+		    #viewDiv {
+		        padding: 0;
+		        margin: 0;
+		        height: 100%;
+		        width: 100%;
+		    }
+		</style>
+
+		<link rel="stylesheet" href="https://js.arcgis.com/4.19/esri/themes/light/main.css">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" href="map.geojson">
+		<script src="https://js.arcgis.com/4.19/"></script>
+		
+		<script>
+		    require([
+		        "esri/config",
+		        "esri/Map",
+		        "esri/views/MapView",
+		        "esri/layers/FeatureLayer",
+		        "esri/Graphic",
+		        "esri/layers/GeoJSONLayer"], function (esriConfig, Map, MapView, FL, Graphic, GeoJSONLayer) {
+		
+		            esriConfig.apiKey = "AAPK56e3ac027f044c4089d8ceec232fc05dYaOuzVRzm8tMRqvzOvDvIEevbqJ85yppn9PacU6cy4duurJrVK9wo_8BcWO8i8bi";
+		
+		            const map = new Map({
+		                basemap: "osm-standard" // Basemap layer service
+		            });
+		
+		            const layer_2022 = new FL({
+                        // url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Earthquakes_Since1970/FeatureServer/",
+		                popupTemplate:{title:"{magnitude}"}
+		            });
+					
+		            map.add(layer_2022);
+					
+					const geojsonlayer = new GeoJSONLayer({
+						url: "routes.geojson",
+					    copyright: "USGS Earthquakes"
+					});
+					geojsonlayer.outFields = ["*"];
+					map.add(geojsonlayer);
+		
+		            const geojsonlayer2 = new GeoJSONLayer({
+		                url: "https://cxqttkl.github.io/web4gis15/China_No_Area.json",
+		                copyright: "USGS Earthquakes"
+		            });
+		            geojsonlayer.outFields = ["*"];
+		            map.add(geojsonlayer2);
+					
+		            const view = new MapView({
+		                map: map,
+		                center: [108, 35.027], // Longitude, latitude
+		                zoom: 3, // Zoom level
+		                container: "viewDiv" // Div element
+		            });
+					
+					view.on("click", function (evet) {
+					    view.graphics.removeAll();
+					    if (evet.button != 2) return;
+					    let query = geojsonlayer.createQuery();
+					    query.geometry = view.toMap(evet);  
+					    query.object = "OBJECTID";
+					    query.returnGeometry = true;
+					    query.outFields = ["*"];
+				
+					    geojsonlayer.queryObjectIds(query).then(function (abc) { alert("查询取经途径地: "+ abc) });
+					    geojsonlayer.queryFeatures(query).then(function (abc) {
+					        abc.features.forEach(function (item) {
+					            var g = new Graphic({
+					                geometry: item.geometry,
+					                // attributes: item.attributes,
+					                symbol: {
+					                    type: "simple-marker",
+					                    color: [255,0,0],
+					                    size: 5,
+					                    style: "square",
+									    outline:null
+					                }
+					            });	
+					            view.graphics.add(g);
+					        });					
+					    });
+							
+					});
+		
+		            view.on("click", function (evt) {
+		                view.graphics.removeAll();
+		                if (evt.button != 0) return;//左键
+		                let query = geojsonlayer2.createQuery(); 
+						query.geometry = view.toMap(evt);
+						query.object = "OBJECTID";
+						query.city = "ENGLISH";
+						query.returnGeometry = true;
+						query.outFields = ["*"];
+		
+		                geojsonlayer2.queryObjectIds(query).then(function (abc) {alert("查询省份的编号: "+abc) });
+		                geojsonlayer2.queryFeatures(query).then(function (abc) {	
+		                    abc.features.forEach(function (item) {
+		                        var g = new Graphic({
+		                            geometry: item.geometry,
+									attributes: item.city,
+		                            symbol: {
+		                                type: "simple-marker",
+		                                color: [0, 0, 255],
+		                                size: 5,
+		                                style: "circle"
+		
+		                            }
+		                        });
+		
+		                        view.graphics.add(g);
+		                    });
+		
+		                });
+		
+		            });
+					
+						
+					
+					
+		
+		
+		//             view.whenLayerView(geojsonlayer).then(function (layerView) {
+		
+		//                 view.on("click", function (evt) {
+		//                     view.graphics.removeAll();
+		//                     if (evt.button != 2) return;//右键 
+		//                     let query = layerView.createQuery();
+		//                     query.geometry = view.toMap(evt);  
+		// 					query.object = "OBJECTID";
+		//                     query.returnGeometry = true;
+		//                     query.outFields = ["*"];
+		                 
+		
+		//                     layerView.queryFeatureCount(query).then(function (abc) { alert("LayerView查询: "+ abc+"1") });
+		//                     layerView.queryFeatures(query).then(function (abc) {
+		//                         abc.features.forEach(function (item) {
+		
+		//                             var g = new Graphic({
+		//                                 geometry: item.geometry,
+		//                                 attributes: item.attributes,
+		// 								spatialRelationship: item.spatialRelationship,
+		//                                 symbol: {
+		//                                     type: "simple-marker",
+		//                                     color: [255,0,0],
+		//                                     size: 5,
+		//                                     style: "square",
+		// 									outline:null
+		//                                 }
+		//                             });
+		
+		//                             view.graphics.add(g);
+		//                         });
+		
+		//                     });
+		
+		//                 });
+		
+		//             });
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		        });
+		</script>
+				
+	</head>
+	<body>
+
+		<div id="d1">
+			<div id="d11">
+			<h>
+				<p id="p1">
+					<b id="b1"><a id="C6">西游记</a></b>
+				    (中国古典四大名著之一）
+				</p>
+			</h>
+			
+			<p id="p3">
+				《西游记》是中国古代第一部浪漫主义章回体长篇神魔小说。现存明刊百回本《西游记》均无作者署名，作者是明代吴承恩。</p>
+			 <p id="p3">
+				《西游记》是中国神魔小说的经典之作，达到了古代长篇浪漫主义小说的巅峰，与《三国演义》《水浒传》《红楼梦》并称为中国古典四大名著。《西游记》自问世以来在民间广为流传，各式各样的版本层出不穷。明代刊本有六种，清代刊本、抄本也有七种，典籍所记已佚版本十三种。鸦片战争以后，大量中国古典文学作品被译为西文，《西游记》渐渐传入欧美，被译为英、法、德、意、西、手语、世（世界语）、斯（斯瓦西里语）、俄、捷、罗、波、日、朝、越等语言。</p>
+			</div>
+		        
+			<img id="img1" src="西游记.jpg" alt="西游记" >
+		</div>
+		
+		
+		
+		<table id="t1" border="0">
+		<tr>
+		  <th rowspan="5">目录：</th>
+		  <td><a href="#C1">内容简介</a></td>
+		  <td><a href="#C2">主要人物</a></td>
+		  <td><a href="#C3">作品影响</a></td>
+		  <td><a href="#C4">精彩电视剧片段欣赏</a></td>
+		  <td><a href="#C5">旧地重游</a></td>
+		</tr>
+		</table>
+		
+		<h id="h1"><a id="C1"> <b>内容简介:</b></a></h>
+		<dir id="d2">
+			<div id="d21">
+			<p id="p6">
+			东胜神州傲来国海边有一花果山，山顶一石，秉受日月精华，产下一个石猴。石猴在花果山做了众猴之王，出海求仙，拜菩提祖师为师。祖师取法名孙悟空，学七十二般变化及翻筋斗云之法。孙悟空回到花果山，去东海龙宫求取如意金箍棒及一身披挂，又去幽冥界把自己的名字从生死簿上勾掉。龙王，地藏王上天庭告状，太白金星两次建议招安孙悟空，玉帝准奏。<br>
+			玉帝封孙悟空做“弼马温”，着他看管马匹。孙悟空后得知此官职卑微，大怒，打出南天门，回花果山，自封为“齐天大圣”。<br>
+			玉帝再降旨封孙悟空为齐天大圣，让其看管蟠桃园。孙悟空偷吃蟠桃，又搅了王母娘娘的蟠桃盛会，偷吃了太上老君的仙丹，惧祸，回到花果山。<br>
+			玉帝派天神捉拿孙悟空，双方相持不下。观音菩萨举荐二郎神制伏孙悟空，孙悟空被二郎神擒获。玉帝令天神将其处死，孙悟空却毫发无损。太上老君将其关入八卦炉，孙悟空不但不死，还炼就一双火眼金睛。如来佛祖应玉帝之请，降伏孙悟空，将其压在五行山下，让他饥食铁丸，渴饮铜汁。<br>
+			南海观音至长安，寻找取经人，指化玄奘，令其去西天取经。唐太宗认玄奘为御弟，赐号三藏，送出长安。<br>
+			唐僧西行，出离大唐边界，遇魔王寅将军，被太白金星搭救。至五行山下，救出孙悟空，赐号孙行者。<br>
+			师徒继续西行，至高老庄，得知庄主女儿被一妖怪强占其，形貌像猪。经观音收伏，赐名猪悟能，在此等候取经人。孙悟空引他拜见唐僧，唐僧收其为徒，赐号八戒。<br>
+			在流沙河，唐僧收被观音点化的沙悟净为三弟子，赐号沙和尚。师徒四人跋山涉水，往西天取经。<br>
+			历经九九八十一难，师徒四人历尽磨难，终至灵山，拜见佛祖如来，求取真经。佛经送回长安，四人真身重返灵山听封：三奘被封旃檀功德佛；悟空为斗战胜佛；八戒为净坛使者；沙僧为金身罗汉；白龙马为八部天龙，各归本位。</p>
+		</dir>
+		
+		<h id="h1"><a id="C2" >主要人物</a></h>
+		<dir id="d3">
+			<dir id="d31">
+		    <p id="p4">
+			<b id="b2">孙悟空:</b><br>
+			孙悟空又名孙行者、悟空，被花果山众妖尊为美猴王，玉帝封其为“齐天大圣”。<br>
+			花果山顶有一块仙石，因长期吸收天真地秀、日月精华，一日从中蹦出一只石猴。他发现了花果山上的水帘洞，被众猴尊奉为王，遂称“美猴王”。他被菩提祖师收为弟子，习得了高强本领，还闯到东海龙宫，强夺了“如意金箍棒”作为自己的兵器。之后他手持金箍棒，自封为“齐天大圣”，大闹天宫，将十万天兵天将打得落花流水。玉帝请来西天如来佛祖解救，如来施法将悟空压在了五行山下。五百年后，观音菩萨将悟空度入佛门，让去西天如来处取佛法真经的大唐高僧唐三藏将他救出。悟空从此成了唐僧的大徒弟。一路上，他和师弟猪八戒、沙和尚护佑师父跋山涉水，降伏了白骨精、蜘蛛精、牛魔王等形形色色的妖魔鬼怪，战胜了九九八十一难，终于成功取到了真经，修成了正果。他本人被如来封为“斗战胜佛”。
+		    </p>
+		</dir>
+		<img id="img2" src="孙悟空.jpg" alt="西游记" >
+		</dir>
+		
+		<div id="d4">
+		    <div id="d41">
+			<p id="p4">			
+			<b id="b2">唐僧:</b><br>
+			唐僧，俗姓陈，小名江流儿，法号玄奘，号三藏，被唐太宗赐姓为唐。为如来佛祖第二弟子金蝉子投胎。他是遗腹子，由于父母凄惨、离奇的经历，自幼在寺庙中出家、长大，在金山寺出家，最终迁移到京城的著名寺院中落户、修行。唐僧勤敏好学，悟性极高，在寺庙僧人中脱颖而出。最终被唐太宗选定，与其结拜并前往西天取经。<br>
+			在取经的路上，唐僧先后收服了三个徒弟：孙悟空、猪八戒、沙僧，并取名为：悟空（菩提祖师所取，唐僧赐别号行者）、悟能、悟净，之后在三个徒弟和白龙马的辅佐下，历尽千辛万苦，终于从西天雷音寺取回三十五部真经。功德圆满，加升大职正果，被赐封为旃檀功德佛。<br>
+			唐僧慈悲心肠，一心向佛，为人诚实善良，也有怯懦的一面。</p>
+		    </div>
+		
+		<img id="img3" src="唐僧.jpg" alt="西游记" >
+		</div>
+		
+		<div id="d5">
+			<div id="d51">
+		    <p id="p4">
+			<b id="b2">猪八戒:</b><br>
+			又名猪刚鬣、猪悟能。原为天宫中的“天蓬元帅”，掌管天河水军。因在王母瑶池蟠桃宴上醉酒，逞雄闯入广寒宫，企图调戏霓裳仙子，霓裳再三再四不依从，东躲西藏心不悦，被纠察灵官奏明玉皇，惹怒玉帝，被罚下人间。但错投了猪胎，成了一只野猪，修炼成精，长成了猪脸人身的模样，拥有投胎前的记忆和玉帝赏赐的兵器。在高老庄抢占高家三小姐高翠兰，被孙悟空降伏，跟随唐僧西天取经。最终得正果，封号为“净坛使者”。为人好吃懒做，憨厚，胆小，且贪图小便宜、好色，但他又是富有喜剧色彩的，而且有时也立有功劳。<br>
+			猪八戒的兵器是九齿钉耙，全名为上宝沁金钯。猪八戒只会天罡数的三十六种变化。
+		    </p>
+			</div>
+			
+			<img id="img4" src="猪八戒.jpg" alt="西游记" >
+		</div>
+		
+		<dir id="d6">
+			<dir id="d61">
+		    <p id="p4">
+			<b id="b2">沙和尚:</b><br>
+			又名沙悟净、沙僧。原为天宫中的卷帘大将，因在蟠桃会上打碎了琉璃盏，惹怒玉皇大帝，被贬入人间，在流沙河畔当妖怪，受万箭穿心之苦。后被唐僧师徒收服，一路主要负责牵马。得成正果后，被封为“金身罗汉”。为人忠厚老实、任劳任怨。
+		    </p>
+		    </dir>
+			
+			<img id="img5" src="沙僧.jpg" alt="西游记" >
+		</dir>
+		    <h id="h1"><a id="C3">作品影响</a></h>
+			<dir id="d7">
+		    <p id="p5">
+			《西游记》的出现，开辟了神魔长篇章回小说的新门类。书中将善意的嘲笑、辛辣的讽刺和严肃的批判巧妙地结合的特点直接影响着讽刺小说的发展。所以说《西游记》是古代长篇浪漫主义小说的高峰，在世界文学史上，它也是浪漫主义的杰作，魔幻现实主义的先驱开创者。<br>
+		    《西游记》对后世神魔小说的创作有很大影响。明末就有人写了《续西游记》和《后西游记》，内容大致模仿《西游记》。另外，像杨志和的《西游记传》和朱鼎臣的《唐三藏西游释厄传》也都和《西游记》有直接的关系。明末董说写的十六回《西游补》，内容情节更自成局面，文笔也颇具特色。
+		    </p>
+			</dir>
+		
+		<h id="h1"><a id="C4">精彩电视剧片段欣赏</a></h>
+		    <div id="d8" >
+				<div id="d81">									
+					<img id="img6" src="大王叫我来巡山.webp.jpg" alt="西游记" >
+			        <h id="h2"><a href="https://www.bilibili.com/video/BV1wK4y1V7c4?share_source=copy_web" target="_blank">大王叫我来巡山</a></h>
+			    </div>
+				<div id="d82">				
+					<img id="img7" src="真假美猴王.jpg" alt="西游记">					
+					<h id="h3"><a href="https://www.bilibili.com/video/BV1vx411u7zV?share_source=copy_web" target="_blank">真假美猴王</a></h>
+				</div>
+			</div>
+				
+		<h id="h1"><a id="C5">旧地重游</a></h>
+		    <div id="d9">
+				<div id="d91">
+				    <img id="img8" src="扬州大明寺.jpg" alt="西游记" >					    <h id="h4"><b>乌鸡国之扬州大明寺</b></h>
+			    </div>
+				<div id="d92">
+					<img id="img9" src="云南石林.jpg" alt="西游记" >
+					<h id="h5"><b>五指山之云南石林</b></h>
+				</div>
+							
+				
+		    </div>
+			
+			<div id="viewDiv"></div>
+			<h id="h7"><a href="#C6">回到顶部</a></h>
+	</body>
+</html>
